@@ -109,51 +109,30 @@
 
     // setInterval(incrementSecondHand, 1000);
 
-    const updateHand = (hand, unit, offset = 90) => {
+    let secondHands = document.getElementsByClassName('second-hand');
+    let minuteHands = document.getElementsByClassName('min-hand');
+    let hourHands   = document.getElementsByClassName('hour-hand');
+
+    const updateHands = function() {
       const now = new Date();
 
-      let newDegrees = 0;
+      const secondsDegrees = (now.getSeconds() / 60) * 360 + 90;
+      const minutesDegrees = (now.getMinutes() / 60) * 360 + 90;
+      const hoursDegrees   = (now.getHours() / 12) * 360 + 90;
 
-      switch (unit) {
-        case 'second':
-          const seconds = now.getSeconds();
-          console.log(`Seconds: ${seconds}`);
-          newDegrees = (seconds / 60) * 360;
-          break;
-        case 'minute':
-          const minutes = now.getMinutes();
-          console.log(`Minutes: ${minutes}`);
-          newDegrees = (minutes / 60) * 360;
-          break;
-        case 'hour':
-          const hours = now.getHours();
-          console.log(`Hours: ${hours}`);
-          newDegrees = (hours / 12) * 360;
-          break;
-        default:
-          console.log(`Unknown unit: ${unit}`);
-      }
-
-      newDegrees += offset;
-      
-      hand.style.transform = `rotate(${newDegrees}deg)`;
+      Array.from(secondHands).forEach(x => {
+        x.style.transform = `rotate(${secondsDegrees}deg)`;
+      })
+      Array.from(minuteHands).forEach(x => {
+        x.style.transform = `rotate(${minutesDegrees}deg)`;
+      })
+      Array.from(hourHands).forEach(x => {
+        x.style.transform = `rotate(${hoursDegrees}deg)`;
+      })
     }
 
-    setInterval(() => {
-      let hands = document.getElementsByClassName('hand');
-      Array.from(hands).forEach(x => {
-        if (x.className.includes('second-hand')) {
-          updateHand(x, 'second');
-        } else if (x.className.includes('min-hand')) {
-          updateHand(x, 'minute');
-        } else if (x.className.includes('hour-hand')) {
-          updateHand(x, 'hour');
-        } else {
-          console.log(`Unknown hand: ${x.className}`);
-        }
-      })
-    }, 1000);
-
+    setInterval(updateHands, 1000);
+  
   </script>
 </body>
 </html>
