@@ -17,6 +17,31 @@
 <script>
 const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
 
+let suggestions = []
+
+const get = fetch(endpoint)
+  .then(data => data.json())
+  .then(data => suggestions = data.map(x => (
+    {'display': `${x.city}, ${x.state}`, ...x}
+  )))
+  .catch(err => console.log(err))
+
+const display_results = function(query) {
+  filtered = suggestions
+    .filter(x => x.display.toLowerCase().includes(query.toLowerCase()))
+    .sort((a, b) => +a.population < +b.population ? 1 : -1);
+  
+  list.innerHTML = filtered.map(x => `<li>${x.display}, ${x.population}</li>`).join('');
+};
+
+const input = document.querySelector('input');
+
+input.addEventListener('input', () => display_results(input.value));
+
+const list = document.querySelector('.suggestions')
+
+console.log(list);
+
 </script>
 </body>
 </html>
